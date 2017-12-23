@@ -1,4 +1,5 @@
 <p id='test'></p>
+<p id='test1'></p>
 
 <script>
 	function spawnRandomEquation() {
@@ -8,14 +9,6 @@
 		}
 		var num1 = Math.floor((Math.random() * 9)+1);
 		var num2 = Math.floor((Math.random() * 9)+1);
-		
-/*
-		if (op == '/') {
-			checkDiv(num1, num2);
-		}
-		*/
-
-		//meow
 
 
 		if (op == '/') {
@@ -23,13 +16,36 @@
 				var num1 = Math.floor((Math.random() * 9)+1);
 				var num2 = Math.floor((Math.random() * 9)+1);
 			}
+			if (checkDiv(num1, num2) == 'flip') {
+				var temp = num1;
+				num1 = num2;
+				num2 = temp;
+			}
 		}
 
+		if (op == "-") {
+			while (checkSub(num1, num2) == false) {
+				var num1 = Math.floor((Math.random() * 9)+1);
+				var num2 = Math.floor((Math.random() * 9)+1);
+			}
+		}
 
 		var operation = num1 + op + num2;
+		var result = eval(operation);
+
 		document.getElementById('test').innerHTML = operation;
+		document.getElementById('test1').innerHTML = result;
+
 	}
 
+	function checkSub(n1, n2) {
+		if (n1 < n2) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+ 
 	function checkDiv(n1, n2) {
 		if (n1 % n2 != 0) {
 			if (n2 % n1 != 0) {
@@ -38,10 +54,7 @@
 				//checkDiv(n1, n2);
 				return false;
 			} else {
-				var temp = n1;
-				n1 = n2;
-				n2 = temp;
-				return true;	
+				return 'flip';	
 			}
 		} else {
 			return true;

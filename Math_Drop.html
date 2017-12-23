@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 	<meta charset="UTF-8">
-	<title>Falling Numbers</title>
+	<title>Math Drop</title>
 	<style>
 		canvas {
 			border:1px solid black;
@@ -12,21 +12,22 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body class='text-center'>
-	<h1 id='score'>0</h1>
+	<h1>score: <span id='score'>0</span>&nbsp;<input id='input' autofocus/></h1>
 	<canvas id='gc'></canvas>
+	<p></p>
 </body>
 <script>
 	var score = 0;
-	var characters = Array();
+	var operations = Array();
 
 	game();
 
 	function game() {
 		gameCanvas();
-		spawnRandomChar();
-		keyListener();
-		drawChar();
-		moveChar();	
+		spawnRandomEquation();
+		killEquations();
+		drawOp();
+		moveOp();	
 	}
 
 	function gameCanvas() {
@@ -39,28 +40,28 @@
 		console.log(canvas);
 	}
 
-	function drawChar() {
+	function drawOp() {
 		var canvas = document.querySelector('canvas');
 		var c = canvas.getContext('2d');
 		c.clearRect(0, 0, 1000, 500);
 
-		characters.forEach( function (charObj){
+		operations.forEach( function (opObj){
 			c.font = "30px Arial";
-			c.fillText(charObj.char,charObj.x,charObj.y);
+			c.fillText(opObj.operation,opObj.x,opObj.y);
 		})
-		setTimeout(drawChar, 1);
+		setTimeout(drawOp, 1);
 	}
 
-	function moveChar() {
+	function moveOp() {
 		vy = getSpeed(score); //	vertical veloicty
-		characters.forEach( function (charObj){
-			charObj.y = charObj.y + vy;
-			if (charObj.y >= 500) {
+		operations.forEach( function (opObj){
+			opObj.y = opObj.y + vy;
+			if (opObj.y >= 500) {
 				endGame();
-				setTimeout(moveChar, 200);
+				die();
 			}
 		})
-		setTimeout(moveChar, 20);
+		setTimeout(moveOp, 50);
 	}
 
 	function getSpeed(score) { //	WiP
@@ -69,17 +70,40 @@
 		} else if (score < 10) {
 			return 2;
 		} else if (score < 15) {
-			return 4;
+			return 2.9;
 		} else if (score < 20) {
-			return 7;
+			return 3.7;
 		} else if (score < 25) { 
-			return 11;
+			return 4.4;
 		} else if (score < 30) {
-			return 16
+			return 5.0;
+		} else if (score < 35) {
+			return 5.5;
+		} else if (score < 40) {
+			return 5.9;
+		} else if (score < 45) {
+			return 6.2;
+		} else if (score < 50) {
+			return 6.4;
+		} else if (score < 55) {
+			return 6.5;
+		} else if (score < 60) {
+			return 6.6;
+		} else if (score < 65) {
+			return 6.7;
+		} else if (score < 70) {
+			return 6.8;
+		} else if (score < 75) {
+			return 6.9;
+		} else if (score < 80) {
+			return 7.0;
+		} else if (score = 100) {
+			endGame();
+			die();
 		}
-	}
+ 	}
 
-	function getSpawnRate(scorer) {
+	function getSpawnRate(score) {
 		if (score < 5) {
 			return 2000;
 		} else if (score < 10) {
@@ -87,9 +111,9 @@
 		} else if (score < 15) {
 			return 1400;
 		} else if (score < 20) {
-			return 1100;
-		} else { //supa fast
-			return 800;
+			return 1200;
+		} else { //zerg
+			return 1000;
 		}
 	}
 
@@ -98,29 +122,91 @@
 		return x;
 	}
 	
-	function spawnRandomChar() {
-		var char = "";
-		var possible = "abcdefghijklmnopqrstuvwxyz123456789";
-
+	function spawnRandomEquation() {
+		var possible_op = "+-*/";
 		for (var i = 0; i < 1; i++) {
-			char = possible.charAt(Math.floor(Math.random() * possible.length));
+			op = possible_op.charAt(Math.floor(Math.random() * possible_op.length));
 		}
+		var num1 = Math.floor((Math.random() * 9)+1);
+		var num2 = Math.floor((Math.random() * 9)+1);
+
+
+		if (op == '/') {
+			while (checkDiv(num1, num2) == false) {
+				var num1 = Math.floor((Math.random() * 9)+1);
+				var num2 = Math.floor((Math.random() * 9)+1);
+			}
+			if (checkDiv(num1, num2) == 'flip') {
+				var temp = num1;
+				num1 = num2;
+				num2 = temp;
+			}
+		}
+
+		if (op == "-") {
+			while (checkSub(num1, num2) == false) {
+				var num1 = Math.floor((Math.random() * 9)+1);
+				var num2 = Math.floor((Math.random() * 9)+1);
+			}
+		}
+
+		var operation = num1 + op + num2;
+		var result = eval(operation);
 		var x = getStartingPosition();
 
-		var object = {char: char, x: x, y: 0};
-		
-		characters.push(object);
+		var object = {operation: operation, result: result, x: x, y: 0};
+
+		operations.push(object);
 
 		rate = getSpawnRate(score);
 
-		setTimeout(spawnRandomChar, rate);
+		setTimeout(spawnRandomEquation, rate);
 	}
 
-	function spawnRandomEquation() {
-		var num1 = 
+	function checkSub(n1, n2) {
+		if (n1 < n2) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+ 
+	function checkDiv(n1, n2) {
+		if (n1 % n2 != 0) {
+			if (n2 % n1 != 0) {
+				//n1 = Math.floor((Math.random() * 9)+1);
+				//n2 = Math.floor((Math.random() * 9)+1);
+				//checkDiv(n1, n2);
+				return false;
+			} else {
+				return 'flip';	
+			}
+		} else {
+			return true;
+		}
 	}
 
-	function keyListener() {
+	function killEquations() {
+		document.getElementById('input').onkeypress = function(e){
+		    if (!e) e = window.event;
+		    if (e.keyCode == '13'){
+		    	//alert(this.value);
+
+		    	var result = this.value;
+
+		    	var obj = operations.find(o => o.result == result);
+
+		        var index = operations.indexOf(obj);
+
+		        if (index > -1) {
+				    operations.splice(index, 1);
+				    score++;
+				    document.getElementById('score').innerHTML = score;
+				}
+				e.currentTarget.value = '';
+		    }
+		}
+		/*
 		document.addEventListener("keypress", function(event) {
     		if (event.keyCode) {
 		    	var char = String.fromCharCode(event.keyCode);
@@ -136,11 +222,13 @@
 				}
     		}
 		})
+		*/
 	}
 
 	function endGame() {
 		string = "Game over! Your score is: " + score; 
 		alert(string);
+		operations = [];
         document.location.reload();
 	}	
 </script>
