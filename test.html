@@ -1,0 +1,53 @@
+<p id='test'></p>
+
+<script>
+	function spawnRandomEquation() {
+		var possible_op = "+-*/";
+		for (var i = 0; i < 1; i++) {
+			op = possible_op.charAt(Math.floor(Math.random() * possible_op.length));
+		}
+		var num1 = Math.floor((Math.random() * 9)+1);
+		var num2 = Math.floor((Math.random() * 9)+1);
+		
+/*
+		if (op == '/') {
+			checkDiv(num1, num2);
+		}
+		*/
+
+		//meow
+
+
+		if (op == '/') {
+			while (checkDiv(num1, num2) == false) {
+				var num1 = Math.floor((Math.random() * 9)+1);
+				var num2 = Math.floor((Math.random() * 9)+1);
+			}
+		}
+
+
+		var operation = num1 + op + num2;
+		document.getElementById('test').innerHTML = operation;
+	}
+
+	function checkDiv(n1, n2) {
+		if (n1 % n2 != 0) {
+			if (n2 % n1 != 0) {
+				//n1 = Math.floor((Math.random() * 9)+1);
+				//n2 = Math.floor((Math.random() * 9)+1);
+				//checkDiv(n1, n2);
+				return false;
+			} else {
+				var temp = n1;
+				n1 = n2;
+				n2 = temp;
+				return true;	
+			}
+		} else {
+			return true;
+		}
+	}
+
+	//checkDiv(9,9);
+	spawnRandomEquation();
+</script>
