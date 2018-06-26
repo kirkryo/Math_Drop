@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset="UTF-8">
+	<title>Math Drop</title>
+	<style>
+		canvas {
+			border:1px solid black;
+		}
+
+		.d4 {
+		  position: relative;
+		  max-height: 100%;
+		  overflow: auto;
+		}
+		.d5 {
+		    height:500px;
+		}
+	</style>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="game.js"></script>
+</head>
+<body>
+		<div class="col-sm-2 text-center">
+			<h2 style="padding-bottom: 2em;">Settings</h2>
+		  	<label for="sel1">Game Mode:</label>
+		  	<select class="form-control" id="mode">
+			    <option>Everything</option>
+			    <option>Addition</option>
+			    <option>Subtraction</option>
+			    <option>Multiplication</option>
+				<option>Division</option>
+			</select>
+		  <label for="sel1">Difficulty:</label>
+		  	<select class="form-control" id="difficulty">
+		    	<option>Easy</option>
+		    	<option>Medium</option>
+		    	<option>Hard</option>
+		  	</select>
+		  	<br>
+		  	<button type="button" id="submit" onclick="submit()">Submit</button>
+		</div>
+		<div class="col-sm-8 text-center">
+			<canvas id='gc'></canvas>
+			<input id='input' autofocus/>
+		</div>
+		<div class="col-sm-2 d4">
+			<h2>score: <span id='score'>0</span></h2>
+			<div class="d5" id='solved'></div>
+		</div>
+</body>
